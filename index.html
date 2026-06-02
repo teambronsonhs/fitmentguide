@@ -145,13 +145,12 @@
     
     function createWolfraceUrl(title) {
         let slug = title.toLowerCase()
-            .replace(/ to /g, '-')
-            .replace(/ on/g, '')
-            .replace(/ inc /g, '-')
-            .replace(/ /g, '-')
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-')
-            .replace(/^-|-$/g, '');
+            .replace(/ to /g, '-to-')        // "1998 to 2011" -> "1998-to-2011"
+            .replace(/ /g, '-')              // spaces to hyphens
+            .replace(/[^a-z0-9-]/g, '')      // remove special chars
+            .replace(/-+/g, '-')             // collapse multiple hyphens
+            .replace(/^-|-$/g, '');          // trim hyphens
+        
         return `https://www.wolfrace.co.uk/${slug}-alloy-wheels`;
     }
     
