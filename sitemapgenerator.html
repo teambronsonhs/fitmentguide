@@ -7,18 +7,19 @@
         body { font-family: monospace; max-width: 800px; margin: 0 auto; padding: 20px; background: #0c0f15; color: #fff; }
         button, input { padding: 10px; margin: 10px 0; background: #2a2f3a; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
         button { background: #ff6b35; font-weight: bold; }
-        pre { background: #1e242c; padding: 15px; overflow-x: auto; border-radius: 5px; max-height: 400px; }
+        pre { background: #1e242c; padding: 15px; overflow-x: auto; border-radius: 5px; max-height: 400px; font-size: 12px; }
         .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
         .error { background: #e74c3c20; border-left: 3px solid #e74c3c; }
         .success { background: #2ecc7120; border-left: 3px solid #2ecc71; }
+        .info { background: #3498db20; border-left: 3px solid #3498db; }
     </style>
 </head>
 <body>
     <h1>🗺️ Fitment Guide Sitemap Generator</h1>
-    <p>This tool reads your <code>fitment-safe.json</code> and creates a <code>sitemap.xml</code> file.</p>
+    <p>This tool reads your clean <code>fitment-safe.json</code> file and creates a <code>sitemap.xml</code>.</p>
     
     <div>
-        <input type="text" id="jsonUrl" placeholder="https://fitmentguide.co.uk/fitment-safe.json" style="width: 100%;" value=".json">
+        <input type="text" id="jsonUrl" placeholder="https://fitmentguide.co.uk/fitment-safe.json" style="width: 100%;" value="fitment-safe.json">
         <br>
         <button id="loadBtn">1. Load JSON Data</button>
         <button id="generateBtn" disabled>2. Generate Sitemap</button>
@@ -27,7 +28,7 @@
 
     <div id="status"></div>
     <div id="preview" style="display: none;">
-        <h3>Preview (first 20 URLs):</h3>
+        <h3>Sample vehicles (first 10):</h3>
         <pre id="previewContent"></pre>
     </div>
 
@@ -43,24 +44,11 @@
         const previewDiv = document.getElementById('preview');
         const previewContent = document.getElementById('previewContent');
 
-        function showStatus(message, isError = false) {
-            statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
-        }
-
-        function cleanTitle(title) {
-            // Remove any Unicode escape sequences or gibberish
-            let clean = title;
-            // If title contains \u, it's escaped - try to decode
-            if (clean.includes('\\u')) {
-                try {
-                    clean = JSON.parse(`"${clean.replace(/"/g, '\\"')}"`);
-                } catch(e) {
-                    // Keep original if parsing fails
-                }
-            }
-            // Remove any remaining non-printable characters
-            clean = clean.replace(/[^\x20-\x7E]/g, '');
-            return clean;
+        function showStatus(message, isError = false, isInfo = false) {
+            let className = 'success';
+            if (isError) className = 'error';
+            if (isInfo) className = 'info';
+            statusDiv.innerHTML = `<div class="status ${className}">${message}</div>`;
         }
 
         function createSlug(title) {
@@ -80,7 +68,7 @@
                 return;
             }
 
-            showStatus('Loading JSON data...');
+            showStatus('Loading JSON data from ' + url + '...', false, true);
             
             try {
                 const response = await fetch(url);
@@ -100,9 +88,21 @@
                 showStatus(`✅ Loaded ${records.length} records from ${url}`);
                 generateBtn.disabled = false;
                 
-                // Show sample of first record
-                if (records.length > 0) {
-                    console.log('Sample record:', records[0]);
+                // Show sample of first few titles
+                const samples = records.slice(0, 10).map(r => r.title || r.vehicle).filter(t => t);
+                if (samples.length > 0) {
+                    previewContent.innerHTML = samples.map((t, i) => `${i+1}. ${t}`).join('\n');
+                    previewDiv.style.display = 'block';
+                } else {
+                    // Try alternate property names
+                    const altSamples = records.slice(0, 10).map(r => r.model || r.name || r.car).filter(t => t);
+                    if (altSamples.length > 0) {
+                        previewContent.innerHTML = altSamples.map((t, i) => `${i+1}. ${t}`).join('\n');
+                        previewDiv.style.display = 'block';
+                    } else {
+                        previewContent.innerHTML = 'Could not find title fields. Raw sample: ' + JSON.stringify(records[0], null, 2);
+                        previewDiv.style.display = 'block';
+                    }
                 }
                 
             } catch (err) {
@@ -119,7 +119,7 @@
                 return;
             }
 
-            showStatus(`Generating sitemap for ${records.length} records...`);
+            showStatus(`Generating sitemap for ${records.length} vehicles...`, false, true);
             
             const baseUrl = 'https://fitmentguide.co.uk';
             const today = new Date().toISOString().split('T')[0];
@@ -131,34 +131,22 @@
             sitemap += `  <url>\n    <loc>${baseUrl}/</loc>\n    <lastmod>${today}</lastmod>\n    <priority>1.0</priority>\n  </url>\n`;
             
             let validCount = 0;
-            const previewUrls = [];
             
             for (const record of records) {
-                let title = record.title || '';
+                // Try different possible title field names
+                let title = record.title || record.model || record.name || record.vehicle || record.car;
                 if (!title) continue;
                 
-                // Clean the title
-                const cleanTitleText = cleanTitle(title);
-                if (!cleanTitleText || cleanTitleText.length < 3) continue;
-                
-                const slug = createSlug(cleanTitleText);
-                if (!slug) continue;
+                const slug = createSlug(title);
+                if (!slug || slug.length < 3) continue;
                 
                 const url = `${baseUrl}/?car=${encodeURIComponent(slug)}`;
                 sitemap += `  <url>\n    <loc>${url}</loc>\n    <priority>0.6</priority>\n  </url>\n`;
                 validCount++;
-                
-                if (previewUrls.length < 20) {
-                    previewUrls.push(cleanTitleText);
-                }
             }
             
             sitemap += '</urlset>';
             sitemapContent = sitemap;
-            
-            // Show preview
-            previewContent.innerHTML = previewUrls.map((title, i) => `${i+1}. ${title}`).join('\n');
-            previewDiv.style.display = 'block';
             
             showStatus(`✅ Generated sitemap with ${validCount + 1} URLs (${validCount} vehicles + homepage)`);
             downloadBtn.disabled = false;
