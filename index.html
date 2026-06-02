@@ -55,10 +55,8 @@
         .wolfrace-btn:hover { background: #ff6b35; color: #0c0f15; }
         .no-results { text-align: center; padding: 3rem; background: #151a22; border-radius: 32px; }
         footer { text-align: center; padding: 2rem; border-top: 1px solid #1e242c; margin-top: 2rem; font-size: 0.7rem; color: #6c7a8a; }
-        footer a { color: #ff6b35; text-decoration: none; }
         @media (max-width: 700px) { .hero h1 { font-size: 1.6rem; } .search-row { flex-direction: column; } .fitment-grid { grid-template-columns: 1fr; } .search-group { min-width: 100%; } }
         .model-select-wrapper { position: relative; }
-        .model-select-wrapper select { cursor: pointer; }
         .loading { text-align: center; padding: 3rem; color: #6c7a8a; }
     </style>
 </head>
@@ -128,7 +126,6 @@
 <footer>
     <p><i class="fas fa-copyright"></i> Fitment Guide UK — Wheel fitment database</p>
     <p>Fitment data for reference only — always verify with manufacturer</p>
-    <p style="margin-top:0.5rem;"><a href="https://www.wolfrace.co.uk" target="_blank" rel="sponsored nofollow">Our trusted partner: Wolfrace Wheels</a></p>
 </footer>
 
 <script>
@@ -269,7 +266,7 @@
             renderSingleResult(null);
             
         } catch (err) {
-            console.warn('Data load issue');
+            // Silent fail - user sees error message in UI
             statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
             resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
         }
