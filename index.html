@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Fitment Guide UK | Wheel & Tyre Specs | Wolfrace Wheels</title>
-    <meta name="description" content="Find wheel fitment specs for your car. Search by brand and model. PCD, offset, centre bore, tyre size.">
-    <meta name="keywords" content="wheel fitment, PCD, offset, wheel specs, alloy wheels, fitment guide">
+    <title>Fitment Guide UK | Wheel & Tyre Specs | Car Fitment Database</title>
+    <meta name="description" content="Find wheel fitment specs for your car. Search by make and model. PCD, offset, centre bore, tyre size. Free fitment database.">
+    <meta name="keywords" content="wheel fitment, PCD, offset, wheel specs, alloy wheels, fitment guide, car fitment">
     <meta name="author" content="Fitment Guide">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://fitmentguide.co.uk/">
@@ -55,6 +55,7 @@
         .wolfrace-btn:hover { background: #ff6b35; color: #0c0f15; }
         .no-results { text-align: center; padding: 3rem; background: #151a22; border-radius: 32px; }
         footer { text-align: center; padding: 2rem; border-top: 1px solid #1e242c; margin-top: 2rem; font-size: 0.7rem; color: #6c7a8a; }
+        footer a { color: #ff6b35; text-decoration: none; }
         @media (max-width: 700px) { .hero h1 { font-size: 1.6rem; } .search-row { flex-direction: column; } .fitment-grid { grid-template-columns: 1fr; } .search-group { min-width: 100%; } }
         .model-select-wrapper { position: relative; }
         .model-select-wrapper select { cursor: pointer; }
@@ -68,7 +69,7 @@
         <div class="logo"><i class="fas fa-car"></i> FITMENT GUIDE</div>
         <div class="nav-links">
             <a href="#search">Search</a>
-            <a href="https://www.wolfrace.co.uk" target="_blank" style="color:#ff6b35;"><i class="fas fa-external-link-alt"></i> Wolfrace Wheels</a>
+            <a href="#results">Database</a>
         </div>
     </div>
 </header>
@@ -125,8 +126,9 @@
 </div>
 
 <footer>
-    <p><i class="fas fa-copyright"></i> Fitment Guide UK — Wheel fitment database | <a href="https://www.wolfrace.co.uk" target="_blank" style="color:#ff6b35;">Wolfrace Wheels</a></p>
-    <p>Always verify with manufacturer specifications</p>
+    <p><i class="fas fa-copyright"></i> Fitment Guide UK — Wheel fitment database</p>
+    <p>Fitment data for reference only — always verify with manufacturer</p>
+    <p style="margin-top:0.5rem;"><a href="https://www.wolfrace.co.uk" target="_blank" rel="sponsored nofollow">Our trusted partner: Wolfrace Wheels</a></p>
 </footer>
 
 <script>
@@ -143,14 +145,14 @@
     const resultCount = document.getElementById('resultCount');
     const statsBadge = document.getElementById('statsBadge');
     
+    // Generate Wolfrace URL from vehicle title
     function createWolfraceUrl(title) {
         let slug = title.toLowerCase()
-            .replace(/ to /g, '-to-')        // "1998 to 2011" -> "1998-to-2011"
-            .replace(/ /g, '-')              // spaces to hyphens
-            .replace(/[^a-z0-9-]/g, '')      // remove special chars
-            .replace(/-+/g, '-')             // collapse multiple hyphens
-            .replace(/^-|-$/g, '');          // trim hyphens
-        
+            .replace(/ to /g, '-to-')
+            .replace(/ /g, '-')
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
         return `https://www.wolfrace.co.uk/${slug}-alloy-wheels`;
     }
     
@@ -190,7 +192,7 @@
                     <span class="spec-tag">Tyre: ${record.tyre || '—'}</span>
                     <span class="spec-tag">Width Range: ${record.width || '—'}"</span>
                 </div>
-                <a href="${wolfraceUrl}" target="_blank" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> View Wheels on Wolfrace</a>
+                <a href="${wolfraceUrl}" target="_blank" rel="sponsored nofollow" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> Check our sponsor wolfrace.co.uk</a>
             </div>
         `;
     }
@@ -267,6 +269,7 @@
             renderSingleResult(null);
             
         } catch (err) {
+            console.warn('Data load issue');
             statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
             resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
         }
