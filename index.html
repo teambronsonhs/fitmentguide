@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Fitment Guide UK | Find Your Wheel & Tyre Specs | Wolfrace Wheels</title>
-    <meta name="description" content="Search 2,500+ wheel fitment records by car model. Find PCD, offset, centre bore, tyre size & get Wolfrace wheel recommendations.">
-    <meta name="keywords" content="wheel fitment, PCD guide, offset calculator, wheel specs, Wolfrace wheels, alloy wheels UK">
+    <title>Fitment Guide UK | Wheel & Tyre Specs | Wolfrace Wheels</title>
+    <meta name="description" content="Find wheel fitment specs for your car. Search by brand and model. PCD, offset, centre bore, tyre size.">
+    <meta name="keywords" content="wheel fitment, PCD, offset, wheel specs, alloy wheels, fitment guide">
     <meta name="author" content="Fitment Guide">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://fitmentguide.co.uk/">
@@ -28,35 +28,37 @@
         .nav-links a:hover { color: #ff6b35; }
         .container { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
         .hero { text-align: center; margin-bottom: 2rem; }
-        .hero h1 { font-size: 2.5rem; font-weight: 800; background: linear-gradient(135deg, #fff, #ff9a6e); -webkit-background-clip: text; background-clip: text; color: transparent; }
-        .hero p { color: #9aa4bf; max-width: 650px; margin: 0.5rem auto 0; }
-        .stats-badge { display: inline-block; background: #1e2229; padding: 0.3rem 1rem; border-radius: 40px; font-size: 0.8rem; margin-top: 1rem; }
+        .hero h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #fff, #ff9a6e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hero p { color: #9aa4bf; max-width: 650px; margin: 0.5rem auto 0; font-size: 0.9rem; }
+        .stats-badge { display: inline-block; background: #1e2229; padding: 0.3rem 1rem; border-radius: 40px; font-size: 0.7rem; margin-top: 1rem; }
         .search-card { background: #151a22; border-radius: 32px; padding: 1.8rem; border: 1px solid #2a2f3a; margin-bottom: 2rem; }
-        .search-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1rem; }
+        .search-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; }
         .search-group { flex: 1; min-width: 200px; }
-        .search-group label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #ff6b35; margin-bottom: 0.4rem; }
+        .search-group label { display: block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #ff6b35; margin-bottom: 0.4rem; }
         .search-group select, .search-group input { width: 100%; padding: 0.8rem 1rem; background: #1e242c; border: 1px solid #2e3540; border-radius: 60px; color: white; font-size: 0.9rem; outline: none; cursor: pointer; }
         .search-group select:focus, .search-group input:focus { border-color: #ff6b35; }
         .search-group input::placeholder { color: #6c7a8a; }
+        .search-group select option { background: #1e242c; }
         .search-btn { background: #ff6b35; border: none; padding: 0.8rem 2rem; border-radius: 60px; font-weight: 700; color: #0c0f15; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
         .search-btn:hover { background: #ff8c5a; transform: translateY(-2px); }
         .reset-btn { background: #2a2f3a; border: none; padding: 0.8rem 1.5rem; border-radius: 60px; font-weight: 500; color: white; cursor: pointer; }
         .ad-top, .ad-mid, .ad-bottom { text-align: center; margin: 1.5rem 0; min-height: 90px; background: rgba(0,0,0,0.2); border-radius: 20px; display: flex; align-items: center; justify-content: center; }
         .results-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 1.5rem; }
-        .fitment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1.2rem; }
-        .fitment-card { background: #151a22; border-radius: 20px; padding: 1.2rem; border-left: 3px solid #ff6b35; border: 1px solid #2a2f3a; border-left-width: 3px; transition: 0.2s; }
+        .fitment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.2rem; }
+        .fitment-card { background: #151a22; border-radius: 20px; padding: 1rem; border-left: 3px solid #ff6b35; border: 1px solid #2a2f3a; border-left-width: 3px; transition: 0.2s; }
         .fitment-card:hover { transform: translateY(-3px); border-color: #ff6b35; }
-        .vehicle-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.6rem; color: #fff; }
-        .spec-row { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem; font-size: 0.75rem; }
+        .vehicle-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.6rem; color: #fff; }
+        .spec-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.4rem; font-size: 0.7rem; }
         .spec-tag { background: #1e242c; padding: 0.2rem 0.6rem; border-radius: 40px; color: #ff9a6e; }
-        .spec-tag-pcd { background: #ff6b3520; font-weight: 600; color: #ff9a6e; }
-        .wolfrace-btn { display: inline-flex; align-items: center; gap: 6px; background: #1a1f2a; border: 1px solid #ff6b35; color: #ff6b35; padding: 0.4rem 0.8rem; border-radius: 60px; font-size: 0.7rem; font-weight: 600; text-decoration: none; margin-top: 0.6rem; transition: 0.2s; }
-        .wolfrace-btn:hover { background: #ff6b35; color: #0c0f15; border-color: #ff6b35; }
+        .spec-tag-pcd { background: #ff6b3520; font-weight: 600; }
+        .wolfrace-btn { display: inline-flex; align-items: center; gap: 5px; background: #1a1f2a; border: 1px solid #ff6b35; color: #ff6b35; padding: 0.35rem 0.7rem; border-radius: 60px; font-size: 0.65rem; font-weight: 600; text-decoration: none; margin-top: 0.5rem; transition: 0.2s; }
+        .wolfrace-btn:hover { background: #ff6b35; color: #0c0f15; }
         .no-results { text-align: center; padding: 3rem; background: #151a22; border-radius: 32px; }
-        footer { text-align: center; padding: 2rem; border-top: 1px solid #1e242c; margin-top: 2rem; font-size: 0.8rem; color: #6c7a8a; }
-        @media (max-width: 700px) { .hero h1 { font-size: 1.8rem; } .search-row { flex-direction: column; } .fitment-grid { grid-template-columns: 1fr; } }
-        .model-hint { font-size: 0.7rem; color: #6c7a8a; margin-top: 0.5rem; text-align: right; }
-        .loading { text-align: center; padding: 3rem; }
+        footer { text-align: center; padding: 2rem; border-top: 1px solid #1e242c; margin-top: 2rem; font-size: 0.7rem; color: #6c7a8a; }
+        @media (max-width: 700px) { .hero h1 { font-size: 1.6rem; } .search-row { flex-direction: column; } .fitment-grid { grid-template-columns: 1fr; } .search-group { min-width: 100%; } }
+        .model-select-wrapper { position: relative; }
+        .model-select-wrapper select { cursor: pointer; }
+        .loading { text-align: center; padding: 3rem; color: #6c7a8a; }
     </style>
 </head>
 <body>
@@ -66,7 +68,6 @@
         <div class="logo"><i class="fas fa-car"></i> FITMENT GUIDE</div>
         <div class="nav-links">
             <a href="#search">Search</a>
-            <a href="#results">Database</a>
             <a href="https://www.wolfrace.co.uk" target="_blank" style="color:#ff6b35;"><i class="fas fa-external-link-alt"></i> Wolfrace Wheels</a>
         </div>
     </div>
@@ -74,9 +75,9 @@
 
 <div class="container">
     <div class="hero">
-        <h1><i class="fas fa-magnifying-glass"></i> Find Your Wheel Fitment</h1>
-        <p>Select your car brand, then search by model — get PCD, offset, bore, bolt pattern & tyre size</p>
-        <div class="stats-badge"><i class="fas fa-database"></i> Loading fitment database...</div>
+        <h1><i class="fas fa-magnifying-glass"></i> Wheel Fitment Search</h1>
+        <p>Select your car make, then choose model — view PCD, offset, bore & tyre size</p>
+        <div class="stats-badge" id="statsBadge"><i class="fas fa-spinner fa-pulse"></i> Loading database...</div>
     </div>
 
     <div class="ad-top">
@@ -87,24 +88,26 @@
     <div class="search-card" id="search">
         <div class="search-row">
             <div class="search-group">
-                <label><i class="fas fa-flag"></i> 1. Select Brand</label>
-                <select id="brandSelect">
-                    <option value="">-- Select a brand --</option>
+                <label><i class="fas fa-flag"></i> Make</label>
+                <select id="makeSelect">
+                    <option value="">-- Select Make --</option>
                 </select>
             </div>
             <div class="search-group">
-                <label><i class="fas fa-car"></i> 2. Search Model</label>
-                <input type="text" id="modelInput" placeholder="e.g., 3 Series, Golf, Focus, A4" autocomplete="off">
+                <label><i class="fas fa-car"></i> Model</label>
+                <div class="model-select-wrapper">
+                    <select id="modelSelect" disabled>
+                        <option value="">-- Select Model --</option>
+                    </select>
+                </div>
             </div>
             <div class="search-group">
                 <label>&nbsp;</label>
                 <div style="display: flex; gap: 0.6rem;">
-                    <button id="searchBtn" class="search-btn"><i class="fas fa-search"></i> Find Fitment</button>
                     <button id="resetBtn" class="reset-btn"><i class="fas fa-undo"></i> Reset</button>
                 </div>
             </div>
         </div>
-        <div class="model-hint"><i class="fas fa-info-circle"></i> Tip: Select brand first, then type model. Click "Find Wheels" to see Wolfrace options.</div>
     </div>
 
     <div class="ad-mid">
@@ -112,7 +115,7 @@
         <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </div>
 
-    <div class="results-header"><h3 id="resultCount">Select a brand to see fitment specs</h3></div>
+    <div class="results-header"><h3 id="resultCount">Select a make and model</h3></div>
     <div id="fitmentGrid" class="fitment-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading fitment data...</div></div>
 
     <div class="ad-bottom">
@@ -122,17 +125,24 @@
 </div>
 
 <footer>
-    <p><i class="fas fa-copyright"></i> Fitment Guide UK — Complete wheel fitment database | Partner: <a href="https://www.wolfrace.co.uk" target="_blank" style="color:#ff6b35;">Wolfrace Wheels</a></p>
-    <p style="margin-top:0.3rem;">Always verify with manufacturer specifications before purchasing wheels or tyres.</p>
+    <p><i class="fas fa-copyright"></i> Fitment Guide UK — Wheel fitment database | <a href="https://www.wolfrace.co.uk" target="_blank" style="color:#ff6b35;">Wolfrace Wheels</a></p>
+    <p>Always verify with manufacturer specifications</p>
 </footer>
 
 <script>
-    // Global fitment data
-    let fitmentRecords = [];
-    let uniqueBrands = new Set();
+// Minimal console output - data loaded quietly
+(function() {
+    let fitmentData = [];
+    let modelsByMake = {};
+    let currentResult = null;
     
-    // Helper: Create Wolfrace URL from vehicle title
-    // Converts "Audi A3 2004 to 2012" -> "audi-a3-2004-2012-alloy-wheels"
+    const makeSelect = document.getElementById('makeSelect');
+    const modelSelect = document.getElementById('modelSelect');
+    const resetBtn = document.getElementById('resetBtn');
+    const resultGrid = document.getElementById('fitmentGrid');
+    const resultCount = document.getElementById('resultCount');
+    const statsBadge = document.getElementById('statsBadge');
+    
     function createWolfraceUrl(title) {
         let slug = title.toLowerCase()
             .replace(/ to /g, '-')
@@ -142,52 +152,11 @@
             .replace(/[^a-z0-9-]/g, '')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
-        
-        // Handle year ranges like "2004 to 2012" -> "2004-2012"
-        slug = slug.replace(/to/g, '-');
-        
         return `https://www.wolfrace.co.uk/${slug}-alloy-wheels`;
     }
     
-    // Render fitment cards
-    function renderResults(data) {
-        const grid = document.getElementById('fitmentGrid');
-        const countSpan = document.getElementById('resultCount');
-        
-        if (!data.length) {
-            grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i> No fitment records found. Try different search terms.</div>`;
-            countSpan.innerHTML = `0 results — try resetting filters`;
-            return;
-        }
-        
-        countSpan.innerHTML = `${data.length} fitment results found (from ${fitmentRecords.length}+ total specs)`;
-        
-        grid.innerHTML = data.map(item => {
-            const wolfraceUrl = createWolfraceUrl(item.title);
-            return `
-                <div class="fitment-card">
-                    <div class="vehicle-title"><i class="fas fa-car"></i> ${escapeHtml(item.title)}</div>
-                    <div class="spec-row">
-                        <span class="spec-tag spec-tag-pcd">PCD: ${item.pcd || '—'}</span>
-                        <span class="spec-tag">Offset: ${item.offset || '—'}</span>
-                        <span class="spec-tag">Bore: ${item.hubBore || '—'}mm</span>
-                    </div>
-                    <div class="spec-row">
-                        <span class="spec-tag">Thread: ${item.thread || '—'}</span>
-                        <span class="spec-tag">${item.type || '—'}</span>
-                        <span class="spec-tag">Hex: ${item.hex || '—'}</span>
-                    </div>
-                    <div class="spec-row">
-                        <span class="spec-tag">Tyre: ${item.tyre || '—'}</span>
-                        <span class="spec-tag">Width: ${item.width || '—'}"</span>
-                    </div>
-                    <a href="${wolfraceUrl}" target="_blank" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> Find Wheels on Wolfrace</a>
-                </div>
-            `;
-        }).join('');
-    }
-    
     function escapeHtml(str) {
+        if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
@@ -196,90 +165,165 @@
         });
     }
     
-    function filterData() {
-        const brand = document.getElementById('brandSelect').value;
-        const model = document.getElementById('modelInput').value.toLowerCase().trim();
-        
-        let filtered = fitmentRecords;
-        
-        if (brand) {
-            filtered = filtered.filter(item => item.brand === brand);
+    function renderSingleResult(record) {
+        if (!record) {
+            resultGrid.innerHTML = '<div class="no-results"><i class="fas fa-search"></i> Select a make and model to view fitment specs</div>';
+            resultCount.innerHTML = 'No selection';
+            return;
         }
         
-        if (model) {
-            filtered = filtered.filter(item => item.title.toLowerCase().includes(model));
-        }
-        
-        renderResults(filtered);
+        const wolfraceUrl = createWolfraceUrl(record.title);
+        resultCount.innerHTML = `Fitment for ${escapeHtml(record.title)}`;
+        resultGrid.innerHTML = `
+            <div class="fitment-card">
+                <div class="vehicle-title"><i class="fas fa-car"></i> ${escapeHtml(record.title)}</div>
+                <div class="spec-row">
+                    <span class="spec-tag spec-tag-pcd">PCD: ${record.pcd || '—'}</span>
+                    <span class="spec-tag">Offset: ${record.offset || '—'}</span>
+                    <span class="spec-tag">Centre Bore: ${record.hubBore || '—'}mm</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-tag">Thread: ${record.thread || '—'}</span>
+                    <span class="spec-tag">${record.type || '—'}</span>
+                    <span class="spec-tag">Hex: ${record.hex || '—'}</span>
+                </div>
+                <div class="spec-row">
+                    <span class="spec-tag">Tyre: ${record.tyre || '—'}</span>
+                    <span class="spec-tag">Width Range: ${record.width || '—'}"</span>
+                </div>
+                <a href="${wolfraceUrl}" target="_blank" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> View Wheels on Wolfrace</a>
+            </div>
+        `;
     }
     
-    function populateBrands() {
-        const brandSelect = document.getElementById('brandSelect');
-        const sortedBrands = Array.from(uniqueBrands).sort();
+    function populateModelDropdown(make) {
+        const models = modelsByMake[make] || [];
+        modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+        if (models.length === 0) {
+            modelSelect.disabled = true;
+            return;
+        }
         
-        brandSelect.innerHTML = '<option value="">-- Select a brand --</option>';
-        sortedBrands.forEach(brand => {
+        models.sort((a, b) => a.title.localeCompare(b.title));
+        models.forEach(model => {
             const option = document.createElement('option');
-            option.value = brand;
-            option.textContent = brand;
-            brandSelect.appendChild(option);
+            option.value = model.title;
+            option.textContent = model.title.length > 60 ? model.title.substring(0, 57) + '...' : model.title;
+            option.dataset.record = JSON.stringify(model);
+            modelSelect.appendChild(option);
+        });
+        modelSelect.disabled = false;
+    }
+    
+    function populateMakeDropdown() {
+        const makes = Object.keys(modelsByMake).sort();
+        makeSelect.innerHTML = '<option value="">-- Select Make --</option>';
+        makes.forEach(make => {
+            const option = document.createElement('option');
+            option.value = make;
+            option.textContent = make;
+            makeSelect.appendChild(option);
         });
     }
     
-    // Load external JSON file
-    async function loadFitmentData() {
+    function resetSelection() {
+        makeSelect.value = '';
+        modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+        modelSelect.disabled = true;
+        currentResult = null;
+        renderSingleResult(null);
+        statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} records loaded`;
+    }
+    
+    // Load JSON silently
+    async function loadData() {
         try {
             const response = await fetch('fitment-data.json');
-            if (!response.ok) throw new Error('Failed to load fitment data');
+            if (!response.ok) throw new Error('JSON file not found');
             const data = await response.json();
             
-            // Handle both array and object with records property
-            if (Array.isArray(data)) {
-                fitmentRecords = data;
-            } else if (data.records && Array.isArray(data.records)) {
-                fitmentRecords = data.records;
-            } else {
-                throw new Error('Invalid data format');
-            }
+            // Handle array or object format
+            fitmentData = Array.isArray(data) ? data : (data.records || []);
             
-            // Extract unique brands
-            fitmentRecords.forEach(record => {
-                if (record.brand) uniqueBrands.add(record.brand);
+            // Build modelsByMake lookup
+            fitmentData.forEach(record => {
+                const brand = record.brand;
+                if (!brand) return;
+                if (!modelsByMake[brand]) modelsByMake[brand] = [];
+                modelsByMake[brand].push({
+                    title: record.title,
+                    hubBore: record.hubBore,
+                    thread: record.thread,
+                    hex: record.hex,
+                    type: record.type,
+                    pcd: record.pcd,
+                    offset: record.offset,
+                    width: record.width,
+                    tyre: record.tyre
+                });
             });
             
-            // Update stats badge
-            document.querySelector('.stats-badge').innerHTML = `<i class="fas fa-database"></i> ${fitmentRecords.length} fitment specs • All makes • Updated 2026`;
+            populateMakeDropdown();
+            statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} fitment records`;
+            renderSingleResult(null);
             
-            // Populate brand dropdown
-            populateBrands();
-            
-            // Initial render (show all)
-            renderResults(fitmentRecords);
-            
-        } catch (error) {
-            console.error('Error loading fitment data:', error);
-            document.getElementById('fitmentGrid').innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Error loading fitment data. Please ensure fitment-data.json exists in the same folder.</div>`;
-            document.querySelector('.stats-badge').innerHTML = `<i class="fas fa-database"></i> Error loading data`;
+        } catch (err) {
+            statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
+            resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
         }
     }
     
-    // Event listeners
-    document.getElementById('searchBtn').addEventListener('click', filterData);
-    document.getElementById('resetBtn').addEventListener('click', () => {
-        document.getElementById('brandSelect').value = '';
-        document.getElementById('modelInput').value = '';
-        renderResults(fitmentRecords);
+    // Event: make changed
+    makeSelect.addEventListener('change', function() {
+        const selectedMake = this.value;
+        if (!selectedMake) {
+            resetSelection();
+            return;
+        }
+        populateModelDropdown(selectedMake);
+        modelSelect.value = '';
+        currentResult = null;
+        renderSingleResult(null);
+        resultCount.innerHTML = `Select a model for ${selectedMake}`;
     });
     
-    // Load data when page loads
-    loadFitmentData();
+    // Event: model changed
+    modelSelect.addEventListener('change', function() {
+        const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+        if (!selectedOption || !selectedOption.value) {
+            currentResult = null;
+            renderSingleResult(null);
+            return;
+        }
+        
+        try {
+            const record = JSON.parse(selectedOption.dataset.record);
+            currentResult = record;
+            renderSingleResult(record);
+        } catch(e) {
+            // fallback - find by title
+            const title = selectedOption.value;
+            const make = makeSelect.value;
+            const found = modelsByMake[make]?.find(m => m.title === title);
+            if (found) {
+                currentResult = found;
+                renderSingleResult(found);
+            }
+        }
+    });
     
-    // Re-push AdSense ads after dynamic content
+    resetBtn.addEventListener('click', resetSelection);
+    
+    // Start loading
+    loadData();
+    
+    // Refresh ads after content loads
     setTimeout(() => {
         if (typeof(adsbygoogle) !== 'undefined') {
             try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
         }
-    }, 1000);
+    }, 1500);
+})();
 </script>
 </body>
 </html>
