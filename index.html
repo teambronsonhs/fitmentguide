@@ -271,6 +271,25 @@
             resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
         }
     }
+
+    // Get car from URL parameter and auto-select it
+const urlParams = new URLSearchParams(window.location.search);
+const carSlug = urlParams.get('car');
+
+if (carSlug) {
+    // Wait for data to load, then find and select the matching vehicle
+    setTimeout(() => {
+        const decodedSlug = carSlug.replace(/-/g, ' ');
+        // Find matching record
+        const match = fitmentData.find(r => 
+            r.title.toLowerCase().includes(decodedSlug)
+        );
+        if (match) {
+            // Auto-select make and model (you'll need to adapt this to your existing logic)
+            console.log('Found match:', match.title);
+        }
+    }, 1000);
+}
     
     // Event: make changed
     makeSelect.addEventListener('change', function() {
