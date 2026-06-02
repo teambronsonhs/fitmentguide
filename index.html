@@ -62,6 +62,17 @@
 </head>
 <body>
 
+    <script>
+// Convert /volvo-c70-1997-to-2005 to ?car=volvo-c70-1997-to-2005
+const path = window.location.pathname;
+if (path !== '/' && path.length > 1) {
+    const slug = path.substring(1).replace(/\.html$/, '').replace(/\/$/, '');
+    if (!window.location.search.includes('car=')) {
+        window.location.href = `/?car=${encodeURIComponent(slug)}`;
+    }
+}
+</script>
+
 <header class="header">
     <div class="header-container">
         <div class="logo"><i class="fas fa-car"></i> FITMENT GUIDE</div>
