@@ -129,7 +129,7 @@
 </footer>
 
 <script>
-// Minimal console output - data loaded quietly
+// Fitment Guide Main Script
 (function() {
     let fitmentData = [];
     let modelsByMake = {};
@@ -231,65 +231,135 @@
         currentResult = null;
         renderSingleResult(null);
         statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} records loaded`;
+        // Remove car parameter from URL without reloading
+        const url = new URL(window.location);
+        url.searchParams.delete('car');
+        window.history.replaceState({}, '', url);
     }
     
-    // Load JSON silently
-    async function loadData() {
-        try {
-            const response = await fetch('fitment-data.json');
-            if (!response.ok) throw new Error('JSON file not found');
-            const data = await response.json();
+    // Load car from URL parameter ?car=...
+    function loadCarFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const carSlug = urlParams.get('car');
+        
+        if (!carSlug || fitmentData.length === 0) return;
+        
+        // Convert slug to search term (replace hyphens with spaces)
+        const searchTerm = carSlug.toLowerCase().replace(/-/g, ' ');
+        
+        // Find matching record - try exact first, then contains
+        let match = fitmentData.find(record => 
+            record.title.toLowerCase() === searchTerm ||
+            record.title.toLowerCase().includes(searchTerm)
+        );
+        
+        // If not found, try extracting make and model
+        if (!match) {
+            match = fitmentData.find(record => 
+                record.title.toLowerCase().replace(/ /g, '-') === carSlug.toLowerCase()
+            );
+        }
+        
+        if (match) {
+            // Find the make in the dropdown
+            const make = match.brand || match.title.split(' ')[0];
+            let makeFound = false;
             
-            // Handle array or object format
-            fitmentData = Array.isArray(data) ? data : (data.records || []);
+            // Set the make dropdown
+            for(let i = 0; i < makeSelect.options.length; i++) {
+                if(makeSelect.options[i].value === make) {
+                    makeSelect.selectedIndex = i;
+                    makeSelect.dispatchEvent(new Event('change'));
+                    makeFound = true;
+                    break;
+                }
+            }
             
-            // Build modelsByMake lookup
-            fitmentData.forEach(record => {
-                const brand = record.brand;
-                if (!brand) return;
-                if (!modelsByMake[brand]) modelsByMake[brand] = [];
-                modelsByMake[brand].push({
-                    title: record.title,
-                    hubBore: record.hubBore,
-                    thread: record.thread,
-                    hex: record.hex,
-                    type: record.type,
-                    pcd: record.pcd,
-                    offset: record.offset,
-                    width: record.width,
-                    tyre: record.tyre
-                });
-            });
-            
-            populateMakeDropdown();
-            statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} fitment records`;
-            renderSingleResult(null);
-            
-        } catch (err) {
-            // Silent fail - user sees error message in UI
-            statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
-            resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
+            // Wait for model dropdown to populate, then find and select model
+            if (makeFound) {
+                const checkInterval = setInterval(() => {
+                    if (modelSelect.options.length > 1) { // Options loaded (not just the default)
+                        clearInterval(checkInterval);
+                        for(let i = 0; i < modelSelect.options.length; i++) {
+                            if(modelSelect.options[i].text === match.title) {
+                                modelSelect.selectedIndex = i;
+                                modelSelect.dispatchEvent(new Event('change'));
+                                break;
+                            }
+                        }
+                    }
+                }, 100);
+                
+                // Timeout after 5 seconds
+                setTimeout(() => clearInterval(checkInterval), 5000);
+            }
         }
     }
-
-    // Get car from URL parameter and auto-select it
-const urlParams = new URLSearchParams(window.location.search);
-const carSlug = urlParams.get('car');
-
-if (carSlug) {
-    // Wait for data to load, then find and select the matching vehicle
-    setTimeout(() => {
-        const decodedSlug = carSlug.replace(/-/g, ' ');
-        // Find matching record
-        const match = fitmentData.find(r => 
-            r.title.toLowerCase().includes(decodedSlug)
-        );
-        if (match) {
-            // Auto-select make and model (you'll need to adapt this to your existing logic)
-            console.log('Found match:', match.title);
+    
+    // Load JSON file (try fitment-safe.json first, then fitment-data.json)
+    async function loadData() {
+        let dataLoaded = false;
+        
+        // Try fitment-safe.json first (unobscured)
+        try {
+            const response = await fetch('fitment-safe.json');
+            if (response.ok) {
+                const data = await response.json();
+                fitmentData = Array.isArray(data) ? data : (data.records || []);
+                dataLoaded = true;
+            }
+        } catch(e) { /* fallback to fitment-data.json */ }
+        
+        // Fallback to fitment-data.json
+        if (!dataLoaded) {
+            try {
+                const response = await fetch('fitment-data.json');
+                if (!response.ok) throw new Error('JSON file not found');
+                const data = await response.json();
+                fitmentData = Array.isArray(data) ? data : (data.records || []);
+                dataLoaded = true;
+            } catch(err) {
+                statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
+                resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json or fitment-safe.json exists.</div>`;
+                return;
+            }
         }
-    }, 1000);
-}
+        
+        if (!fitmentData.length) {
+            statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No data found`;
+            resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> No fitment records found in JSON file.</div>`;
+            return;
+        }
+        
+        // Build modelsByMake lookup
+        fitmentData.forEach(record => {
+            let brand = record.brand;
+            if (!brand && record.title) {
+                brand = record.title.split(' ')[0];
+            }
+            if (!brand) return;
+            if (!modelsByMake[brand]) modelsByMake[brand] = [];
+            modelsByMake[brand].push({
+                title: record.title,
+                hubBore: record.hubBore,
+                thread: record.thread,
+                hex: record.hex,
+                type: record.type,
+                pcd: record.pcd,
+                offset: record.offset,
+                width: record.width,
+                tyre: record.tyre,
+                brand: brand
+            });
+        });
+        
+        populateMakeDropdown();
+        statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} fitment records`;
+        renderSingleResult(null);
+        
+        // Load car from URL parameter after data is ready
+        loadCarFromURL();
+    }
     
     // Event: make changed
     makeSelect.addEventListener('change', function() {
@@ -318,14 +388,22 @@ if (carSlug) {
             const record = JSON.parse(selectedOption.dataset.record);
             currentResult = record;
             renderSingleResult(record);
+            // Update URL with car parameter
+            const slug = record.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+            const url = new URL(window.location);
+            url.searchParams.set('car', slug);
+            window.history.replaceState({}, '', url);
         } catch(e) {
-            // fallback - find by title
             const title = selectedOption.value;
             const make = makeSelect.value;
             const found = modelsByMake[make]?.find(m => m.title === title);
             if (found) {
                 currentResult = found;
                 renderSingleResult(found);
+                const slug = found.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+                const url = new URL(window.location);
+                url.searchParams.set('car', slug);
+                window.history.replaceState({}, '', url);
             }
         }
     });
