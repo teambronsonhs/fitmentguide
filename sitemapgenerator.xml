@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fitment Guide - Sitemap Generator</title>
+    <style>
+        body { font-family: monospace; max-width: 800px; margin: 0 auto; padding: 20px; background: #0c0f15; color: #fff; }
+        button, input { padding: 10px; margin: 10px 0; background: #2a2f3a; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        button { background: #ff6b35; font-weight: bold; }
+        pre { background: #1e242c; padding: 15px; overflow-x: auto; border-radius: 5px; max-height: 400px; }
+        .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .error { background: #e74c3c20; border-left: 3px solid #e74c3c; }
+        .success { background: #2ecc7120; border-left: 3px solid #2ecc71; }
+    </style>
+</head>
+<body>
+    <h1>🗺️ Fitment Guide Sitemap Generator</h1>
+    <p>This tool reads your <code>fitment-data.json</code> and creates a <code>sitemap.xml</code> file.</p>
+    
+    <div>
+        <input type="text" id="jsonUrl" placeholder="https://fitmentguide.co.uk/fitment-data.json" style="width: 100%;" value="fitment-data.json">
+        <br>
+        <button id="loadBtn">1. Load JSON Data</button>
+        <button id="generateBtn" disabled>2. Generate Sitemap</button>
+        <button id="downloadBtn" disabled>3. Download sitemap.xml</button>
+    </div>
+
+    <div id="status"></div>
+    <div id="preview" style="display: none;">
+        <h3>Preview (first 20 URLs):</h3>
+        <pre id="previewContent"></pre>
+    </div>
+
+    <script>
+        let records = [];
+        let sitemapContent = '';
+
+        const jsonUrlInput = document.getElementById('jsonUrl');
+        const loadBtn = document.getElementById('loadBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const statusDiv = document.getElementById('status');
+        const previewDiv = document.getElementById('preview');
+        const previewContent = document.getElementById('previewContent');
+
+        function showStatus(message, isError = false) {
+            statusDiv.innerHTML = `<div class="status ${isError ? 'error' : 'success'}">${message}</div>`;
+        }
+
+        function cleanTitle(title) {
+            // Remove any Unicode escape sequences or gibberish
+            let clean = title;
+            // If title contains \u, it's escaped - try to decode
+            if (clean.includes('\\u')) {
+                try {
+                    clean = JSON.parse(`"${clean.replace(/"/g, '\\"')}"`);
+                } catch(e) {
+                    // Keep original if parsing fails
+                }
+            }
+            // Remove any remaining non-printable characters
+            clean = clean.replace(/[^\x20-\x7E]/g, '');
+            return clean;
+        }
+
+        function createSlug(title) {
+            let slug = title.toLowerCase()
+                .replace(/ to /g, '-to-')
+                .replace(/ & /g, '-and-')
+                .replace(/[^a-z0-9-]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            return slug;
+        }
+
+        loadBtn.addEventListener('click', async () => {
+            const url = jsonUrlInput.value.trim();
+            if (!url) {
+                showStatus('Please enter a URL to the JSON file', true);
+                return;
+            }
+
+            showStatus('Loading JSON data...');
+            
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                
+                const data = await response.json();
+                
+                // Handle array or object with records property
+                if (Array.isArray(data)) {
+                    records = data;
+                } else if (data.records && Array.isArray(data.records)) {
+                    records = data.records;
+                } else {
+                    throw new Error('Invalid JSON format - expected array or object with "records" array');
+                }
+                
+                showStatus(`✅ Loaded ${records.length} records from ${url}`);
+                generateBtn.disabled = false;
+                
+                // Show sample of first record
+                if (records.length > 0) {
+                    console.log('Sample record:', records[0]);
+                }
+                
+            } catch (err) {
+                showStatus(`❌ Error loading JSON: ${err.message}`, true);
+                console.error(err);
+                generateBtn.disabled = true;
+                downloadBtn.disabled = true;
+            }
+        });
+
+        generateBtn.addEventListener('click', () => {
+            if (records.length === 0) {
+                showStatus('No data loaded. Please load JSON first.', true);
+                return;
+            }
+
+            showStatus(`Generating sitemap for ${records.length} records...`);
+            
+            const baseUrl = 'https://fitmentguide.co.uk';
+            const today = new Date().toISOString().split('T')[0];
+            
+            let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+            sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+            
+            // Add homepage
+            sitemap += `  <url>\n    <loc>${baseUrl}/</loc>\n    <lastmod>${today}</lastmod>\n    <priority>1.0</priority>\n  </url>\n`;
+            
+            let validCount = 0;
+            const previewUrls = [];
+            
+            for (const record of records) {
+                let title = record.title || '';
+                if (!title) continue;
+                
+                // Clean the title
+                const cleanTitleText = cleanTitle(title);
+                if (!cleanTitleText || cleanTitleText.length < 3) continue;
+                
+                const slug = createSlug(cleanTitleText);
+                if (!slug) continue;
+                
+                const url = `${baseUrl}/?car=${encodeURIComponent(slug)}`;
+                sitemap += `  <url>\n    <loc>${url}</loc>\n    <priority>0.6</priority>\n  </url>\n`;
+                validCount++;
+                
+                if (previewUrls.length < 20) {
+                    previewUrls.push(cleanTitleText);
+                }
+            }
+            
+            sitemap += '</urlset>';
+            sitemapContent = sitemap;
+            
+            // Show preview
+            previewContent.innerHTML = previewUrls.map((title, i) => `${i+1}. ${title}`).join('\n');
+            previewDiv.style.display = 'block';
+            
+            showStatus(`✅ Generated sitemap with ${validCount + 1} URLs (${validCount} vehicles + homepage)`);
+            downloadBtn.disabled = false;
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!sitemapContent) {
+                showStatus('No sitemap generated. Please generate first.', true);
+                return;
+            }
+            
+            const blob = new Blob([sitemapContent], { type: 'application/xml' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'sitemap.xml';
+            link.click();
+            URL.revokeObjectURL(link.href);
+            
+            showStatus('✅ sitemap.xml downloaded! Upload this file to your GitHub repository.');
+        });
+    </script>
+</body>
+</html>
