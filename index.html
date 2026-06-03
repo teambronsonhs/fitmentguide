@@ -13,7 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     
-    <!-- Google AdSense -->
+    <!-- Google AdSense - Auto Ads only -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9372101106094036" crossorigin="anonymous"></script>
     
     <style>
@@ -53,7 +53,7 @@
         .search-btn { background: var(--primary); border: none; padding: 0.8rem 2rem; border-radius: 60px; font-weight: 700; color: #0c0f15; cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; }
         .search-btn:hover { background: var(--primary-dark); transform: translateY(-2px); }
         .reset-btn { background: #2a2f3a; border: none; padding: 0.8rem 1.5rem; border-radius: 60px; font-weight: 500; color: white; cursor: pointer; }
-        .ad-top, .ad-mid, .ad-bottom { text-align: center; margin: 1.5rem 0; min-height: 90px; background: rgba(0,0,0,0.2); border-radius: 20px; display: flex; align-items: center; justify-content: center; }
+        
         .results-header { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; margin-bottom: 1.5rem; }
         .fitment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.2rem; }
         .fitment-card { background: var(--dark-card); border-radius: 20px; padding: 1rem; border-left: 3px solid var(--primary); border: 1px solid var(--border); border-left-width: 3px; transition: 0.2s; }
@@ -90,11 +90,6 @@
         <div class="stats-badge" id="statsBadge"><i class="fas fa-spinner fa-pulse"></i> Loading database...</div>
     </div>
 
-    <div class="ad-top">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9372101106094036" data-ad-slot="9123456789" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
     <div class="search-card" id="search">
         <div class="search-row">
             <div class="search-group">
@@ -120,18 +115,8 @@
         </div>
     </div>
 
-    <div class="ad-mid">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9372101106094036" data-ad-slot="9123456790" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-
     <div class="results-header"><h3 id="resultCount">Select a make and model</h3></div>
     <div id="fitmentGrid" class="fitment-grid"><div class="loading"><i class="fas fa-spinner fa-pulse"></i> Loading fitment data...</div></div>
-
-    <div class="ad-bottom">
-        <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-9372101106094036" data-ad-slot="9123456791" data-ad-format="auto" data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
 </div>
 
 <footer>
@@ -153,7 +138,6 @@
     const resultCount = document.getElementById('resultCount');
     const statsBadge = document.getElementById('statsBadge');
     
-    // Clean PCD display (remove "0x" prefix and "None" suffix)
     function cleanPCD(pcd) {
         if (!pcd) return '—';
         let cleaned = pcd.replace(/^0x/, '').replace(/ None$/, '').replace(/None/, '').trim();
@@ -313,7 +297,7 @@
                 dataLoaded = true;
             } catch(err) {
                 statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
-                resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data.</div>`;
+                resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>`;
                 return;
             }
         }
@@ -396,12 +380,6 @@
     
     resetBtn.addEventListener('click', resetSelection);
     loadData();
-    
-    setTimeout(() => {
-        if (typeof(adsbygoogle) !== 'undefined') {
-            try { (adsbygoogle = window.adsbygoogle || []).push({}); } catch(e) {}
-        }
-    }, 1500);
 })();
 </script>
 </body>
