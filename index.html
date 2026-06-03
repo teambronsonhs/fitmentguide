@@ -193,6 +193,9 @@
                 <a href="${wolfraceUrl}" target="_blank" rel="sponsored nofollow" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> Search for wheels wolfrace.co.uk</a>
             </div>
         `;
+        
+        // AUTO-SCROLL TO RESULTS
+        resultGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     function populateModelDropdown(make) {
