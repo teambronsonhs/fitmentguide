@@ -240,7 +240,7 @@
             .replace(/[^a-z0-9-]/g, '')
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '');
-        return 'https://www.wolfrace.co.uk/' + slug + '-alloy-wheels';
+        return `https://www.wolfrace.co.uk/${slug}-alloy-wheels`;
     }
     
     function escapeHtml(str) {
@@ -260,55 +260,80 @@
             return;
         }
         
-        var wolfraceUrl = createWolfraceUrl(record.title);
-        resultCount.innerHTML = 'Fitment for ' + escapeHtml(record.title);
-        resultGrid.innerHTML = '<div class="fitment-card">' +
-            '<div class="vehicle-title"><i class="fas fa-car"></i> ' + escapeHtml(record.title) + '</div>' +
-            '<div class="specs-container">' +
-                '<div class="spec-row"><span class="spec-label">PCD</span><span class="spec-value spec-value-pcd">' + cleanPCD(record.pcd) + '</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Offset</span><span class="spec-value">' + (record.offset || '—') + ' mm</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Centre Bore</span><span class="spec-value">' + (record.hubBore || '—') + ' mm</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Thread</span><span class="spec-value">' + (record.thread || '—') + '</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Fastener</span><span class="spec-value">' + (record.type || '—') + ' (Hex ' + (record.hex || '—') + ')</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Tyre Size</span><span class="spec-value">' + (record.tyre || '—') + '</span></div>' +
-                '<div class="spec-row"><span class="spec-label">Wheel Width</span><span class="spec-value">' + (record.width || '—') + ' inches</span></div>' +
-            '</div>' +
-            '<a href="' + wolfraceUrl + '" target="_blank" rel="sponsored nofollow" class="wolfrace-btn"><i class="fas fa-external-link-alt"></i> Search for wheels on Wolfrace</a>' +
-        '</div>';
+        const wolfraceUrl = createWolfraceUrl(record.title);
+        resultCount.innerHTML = `Fitment for ${escapeHtml(record.title)}`;
+        resultGrid.innerHTML = `
+            <div class="fitment-card">
+                <div class="vehicle-title">
+                    <i class="fas fa-car"></i> ${escapeHtml(record.title)}
+                </div>
+                <div class="specs-container">
+                    <div class="spec-row">
+                        <span class="spec-label">⚙️ PCD</span>
+                        <span class="spec-value spec-value-pcd">${cleanPCD(record.pcd)}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">📏 Offset</span>
+                        <span class="spec-value">${record.offset || '—'} mm</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">🎯 Centre Bore</span>
+                        <span class="spec-value">${record.hubBore || '—'} mm</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">🔩 Thread</span>
+                        <span class="spec-value">${record.thread || '—'}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">🔧 Fastener</span>
+                        <span class="spec-value">${record.type || '—'} (Hex ${record.hex || '—'})</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">🛞 Tyre Size</span>
+                        <span class="spec-value">${record.tyre || '—'}</span>
+                    </div>
+                    <div class="spec-row">
+                        <span class="spec-label">📐 Wheel Width</span>
+                        <span class="spec-value">${record.width || '—'} inches</span>
+                    </div>
+                </div>
+                <a href="${wolfraceUrl}" target="_blank" rel="sponsored nofollow" class="wolfrace-btn">
+                    <i class="fas fa-external-link-alt"></i> Search for wheels on Wolfrace
+                </a>
+            </div>
+        `;
         
         resultGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
     
     function populateModelDropdown(make) {
-        var models = modelsByMake[make] || [];
+        const models = modelsByMake[make] || [];
         modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
         if (models.length === 0) {
             modelSelect.disabled = true;
             return;
         }
         
-        models.sort(function(a, b) { return a.title.localeCompare(b.title); });
-        for (var i = 0; i < models.length; i++) {
-            var model = models[i];
-            var option = document.createElement('option');
+        models.sort((a, b) => a.title.localeCompare(b.title));
+        models.forEach(model => {
+            const option = document.createElement('option');
             option.value = model.title;
-            var displayTitle = model.title.length > 60 ? model.title.substring(0, 57) + '...' : model.title;
-            option.textContent = displayTitle;
+            option.textContent = model.title.length > 60 ? model.title.substring(0, 57) + '...' : model.title;
             option.dataset.record = JSON.stringify(model);
             modelSelect.appendChild(option);
-        }
+        });
         modelSelect.disabled = false;
     }
     
     function populateMakeDropdown() {
-        var makes = Object.keys(modelsByMake).sort();
+        const makes = Object.keys(modelsByMake).sort();
         makeSelect.innerHTML = '<option value="">-- Select Make --</option>';
-        for (var i = 0; i < makes.length; i++) {
-            var option = document.createElement('option');
-            option.value = makes[i];
-            option.textContent = makes[i];
+        makes.forEach(make => {
+            const option = document.createElement('option');
+            option.value = make;
+            option.textContent = make;
             makeSelect.appendChild(option);
-        }
+        });
     }
     
     function resetSelection() {
@@ -317,61 +342,58 @@
         modelSelect.disabled = true;
         currentResult = null;
         renderSingleResult(null);
-        statsBadge.innerHTML = '<i class="fas fa-database"></i> ' + fitmentData.length + ' records loaded';
-        var url = new URL(window.location);
+        statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} records loaded`;
+        const url = new URL(window.location);
         url.searchParams.delete('car');
         window.history.replaceState({}, '', url);
     }
     
     function loadCarFromURL() {
-        var urlParams = new URLSearchParams(window.location.search);
-        var carSlug = urlParams.get('car');
+        const urlParams = new URLSearchParams(window.location.search);
+        const carSlug = urlParams.get('car');
         if (!carSlug || fitmentData.length === 0) return;
         
-        var searchTerm = carSlug.toLowerCase().replace(/-/g, ' ');
-        var match = null;
-        for (var i = 0; i < fitmentData.length; i++) {
-            if (fitmentData[i].title.toLowerCase() === searchTerm || fitmentData[i].title.toLowerCase().indexOf(searchTerm) !== -1) {
-                match = fitmentData[i];
-                break;
-            }
-        }
+        const searchTerm = carSlug.toLowerCase().replace(/-/g, ' ');
+        let match = fitmentData.find(record => 
+            record.title.toLowerCase() === searchTerm ||
+            record.title.toLowerCase().includes(searchTerm)
+        );
         
         if (match) {
-            var make = match.brand || match.title.split(' ')[0];
-            var makeFound = false;
-            for (var j = 0; j < makeSelect.options.length; j++) {
-                if (makeSelect.options[j].value === make) {
-                    makeSelect.selectedIndex = j;
+            const make = match.brand || match.title.split(' ')[0];
+            let makeFound = false;
+            for(let i = 0; i < makeSelect.options.length; i++) {
+                if(makeSelect.options[i].value === make) {
+                    makeSelect.selectedIndex = i;
                     makeSelect.dispatchEvent(new Event('change'));
                     makeFound = true;
                     break;
                 }
             }
             if (makeFound) {
-                var checkInterval = setInterval(function() {
+                const checkInterval = setInterval(() => {
                     if (modelSelect.options.length > 1) {
                         clearInterval(checkInterval);
-                        for (var k = 0; k < modelSelect.options.length; k++) {
-                            if (modelSelect.options[k].text === match.title) {
-                                modelSelect.selectedIndex = k;
+                        for(let i = 0; i < modelSelect.options.length; i++) {
+                            if(modelSelect.options[i].text === match.title) {
+                                modelSelect.selectedIndex = i;
                                 modelSelect.dispatchEvent(new Event('change'));
                                 break;
                             }
                         }
                     }
                 }, 100);
-                setTimeout(function() { clearInterval(checkInterval); }, 5000);
+                setTimeout(() => clearInterval(checkInterval), 5000);
             }
         }
     }
     
     async function loadData() {
-        var dataLoaded = false;
+        let dataLoaded = false;
         try {
-            var response = await fetch('fitment-data.json');
+            const response = await fetch('fitment-data.json');
             if (response.ok) {
-                var data = await response.json();
+                const data = await response.json();
                 fitmentData = Array.isArray(data) ? data : (data.records || []);
                 dataLoaded = true;
             }
@@ -379,30 +401,29 @@
         
         if (!dataLoaded) {
             try {
-                var response2 = await fetch('fitment-safe.json');
-                if (!response2.ok) throw new Error('JSON not found');
-                var data2 = await response2.json();
-                fitmentData = Array.isArray(data2) ? data2 : (data2.records || []);
+                const response = await fetch('fitment-safe.json');
+                if (!response.ok) throw new Error('JSON not found');
+                const data = await response.json();
+                fitmentData = Array.isArray(data) ? data : (data.records || []);
                 dataLoaded = true;
             } catch(err) {
-                statsBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error loading data';
-                resultGrid.innerHTML = '<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data. Please ensure fitment-data.json exists.</div>';
+                statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error loading data`;
+                resultGrid.innerHTML = `<div class="no-results"><i class="fas fa-exclamation-triangle"></i> Unable to load fitment data.</div>`;
                 return;
             }
         }
         
         if (!fitmentData.length) {
-            statsBadge.innerHTML = '<i class="fas fa-exclamation-triangle"></i> No data found';
+            statsBadge.innerHTML = `<i class="fas fa-exclamation-triangle"></i> No data found`;
             return;
         }
         
-        for (var i = 0; i < fitmentData.length; i++) {
-            var record = fitmentData[i];
-            var brand = record.brand;
+        fitmentData.forEach(record => {
+            let brand = record.brand;
             if (!brand && record.title) {
                 brand = record.title.split(' ')[0];
             }
-            if (!brand) continue;
+            if (!brand) return;
             if (!modelsByMake[brand]) modelsByMake[brand] = [];
             modelsByMake[brand].push({
                 title: record.title,
@@ -416,16 +437,16 @@
                 tyre: record.tyre,
                 brand: brand
             });
-        }
+        });
         
         populateMakeDropdown();
-        statsBadge.innerHTML = '<i class="fas fa-database"></i> ' + fitmentData.length + ' fitment records';
+        statsBadge.innerHTML = `<i class="fas fa-database"></i> ${fitmentData.length} fitment records`;
         renderSingleResult(null);
         loadCarFromURL();
     }
     
     makeSelect.addEventListener('change', function() {
-        var selectedMake = this.value;
+        const selectedMake = this.value;
         if (!selectedMake) {
             resetSelection();
             return;
@@ -434,44 +455,36 @@
         modelSelect.value = '';
         currentResult = null;
         renderSingleResult(null);
-        resultCount.innerHTML = 'Select a model for ' + selectedMake;
+        resultCount.innerHTML = `Select a model for ${selectedMake}`;
         modelSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
     
     modelSelect.addEventListener('change', function() {
-        var selectedOption = modelSelect.options[modelSelect.selectedIndex];
+        const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         if (!selectedOption || !selectedOption.value) {
             currentResult = null;
             renderSingleResult(null);
             return;
         }
         try {
-            var record = JSON.parse(selectedOption.dataset.record);
+            const record = JSON.parse(selectedOption.dataset.record);
             currentResult = record;
             renderSingleResult(record);
-            var slug = record.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
-            var url = new URL(window.location);
+            const slug = record.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+            const url = new URL(window.location);
             url.searchParams.set('car', slug);
             window.history.replaceState({}, '', url);
         } catch(e) {
-            var title = selectedOption.value;
-            var make = makeSelect.value;
-            var found = null;
-            if (modelsByMake[make]) {
-                for (var i = 0; i < modelsByMake[make].length; i++) {
-                    if (modelsByMake[make][i].title === title) {
-                        found = modelsByMake[make][i];
-                        break;
-                    }
-                }
-            }
+            const title = selectedOption.value;
+            const make = makeSelect.value;
+            const found = modelsByMake[make]?.find(m => m.title === title);
             if (found) {
                 currentResult = found;
                 renderSingleResult(found);
-                var slug2 = found.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
-                var url2 = new URL(window.location);
-                url2.searchParams.set('car', slug2);
-                window.history.replaceState({}, '', url2);
+                const slug = found.title.toLowerCase().replace(/ /g, '-').replace(/[^a-z0-9-]/g, '');
+                const url = new URL(window.location);
+                url.searchParams.set('car', slug);
+                window.history.replaceState({}, '', url);
             }
         }
     });
